@@ -1,19 +1,20 @@
 <?php
+
 $commands = ["delete", "check"];
 
-$cat = $_GET['cat'];
-$task = $_GET['task'];
+$cat = $_GET['cat'] ?? null;
+$task = $_GET['task'] ?? null;
 
 if (!empty($cat) && in_array($cat, $commands)) {
  system("tb --$cat $task");
- header("Location: task.php");
+ header("Location: index.php");
 } else {
  if (!empty($cat)) {
   system("tb --task @$cat $task");
-  header("Location: task.php");
+  header("Location: index.php");
  } else if (isset($task)){
   system("tb --task $task");
-  header("Location: task.php");
+  header("Location: index.php");
  }
 }
 
@@ -41,19 +42,19 @@ echo "<pre>";
 echo $board;
 echo "</pre>";
 ?>
-<form action="task.php">
+<form action="index.php">
 <input type="text" name="cat" placeholder="Categoria" value="<?php echo $_GET['catName'] ?? '' ?>">
 <input type="text" name="task" placeholder="Tarea">
 <input type="submit">
 </form>
 
-<form action="task.php">
+<form action="index.php">
 <input type="hidden" name="cat" value="delete">
 <input type="number" name="task" placeholder="Num tarea">
 <input type="submit" value="Delete">
 </form>
 
-<form action="task.php">
+<form action="index.php">
 <input type="hidden" name="cat" value="check">
 <input type="number" name="task" placeholder="Num tarea">
 <input type="submit" value="Finish">
