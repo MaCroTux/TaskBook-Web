@@ -4,23 +4,24 @@ $commands = ["delete", "check"];
 
 $cat = $_GET['cat'] ?? null;
 $task = $_GET['task'] ?? null;
+$script = $_SERVER['SCRIPT_NAME'];
 
 if (!empty($cat) && in_array($cat, $commands)) {
  system("tb --$cat $task");
- header("Location: index.php");
+ header("Location: ".$script);
 } else {
  if (!empty($cat)) {
-  system("tb --task @$cat $task");
-  header("Location: index.php");
+  system("tb --task '@$cat' '$task'");
+  header("Location: ".$script);
  } else if (isset($task)){
-  system("tb --task $task");
-  header("Location: index.php");
+  system("tb --task '$task'");
+  header("Location: ".$script);
  }
 }
 
 $board = shell_exec("tb");
 
-$board = preg_replace("/[@](.* )/", "<a href='?catName=$1'>@$1</a>", $board);
+$board = preg_replace("/(([@](.*)) )/m", "<a href='?catName=$3'>$2</a> ", $board);
 
 ?><!doctype html>
 <html lang="en">
@@ -42,19 +43,19 @@ echo "<pre>";
 echo $board;
 echo "</pre>";
 ?>
-<form action="index.php">
+<form action="<?php echo $script ?>">
 <input type="text" name="cat" placeholder="Categoria" value="<?php echo $_GET['catName'] ?? '' ?>">
 <input type="text" name="task" placeholder="Tarea">
 <input type="submit">
 </form>
 
-<form action="index.php">
+<form action="<?php echo $script ?>">
 <input type="hidden" name="cat" value="delete">
 <input type="number" name="task" placeholder="Num tarea">
 <input type="submit" value="Delete">
 </form>
 
-<form action="index.php">
+<form action="<?php echo $script ?>">
 <input type="hidden" name="cat" value="check">
 <input type="number" name="task" placeholder="Num tarea">
 <input type="submit" value="Finish">
