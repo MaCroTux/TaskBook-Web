@@ -1,0 +1,19 @@
+{
+    "authors": [
+        {
+            "name": "Javier Feria",
+            "email": "macrotux@gmail.com",
+            "homepage": "http://javierferia.com",
+            "role": "Owner"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "TaskBook\\": "src/",
+            "TaskBook\\Tests\\Unit\\": "tests/unit/"
+        }
+    },
+    "require": {
+        "phpunit/phpunit": "^6.5"
+    }
+}
