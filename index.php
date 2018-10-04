@@ -22,6 +22,9 @@ if (!empty($cat) && in_array($cat, $commands)) {
 $board = shell_exec("tb");
 
 $board = preg_replace("/(([@](.*)) )/m", "<a href='?catName=$3'>$2</a> ", $board);
+$board = preg_replace("@(https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9:%_\+.~#?&//=]*))@i", "<a target='_blank' href='$1'>$1</a> ", $board);
+
+//(www|http:|https:)+[^\s]+[\w]/
 
 ?><!doctype html>
 <html lang="en">
