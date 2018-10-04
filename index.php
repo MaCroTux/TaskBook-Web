@@ -1,7 +1,11 @@
 <?php
 
+require "vendor/autoload.php";
+
+use TaskBook\Application\TaskListUseCase;
+use TaskBook\Infrastructure\TbTaskRepository;
+
 const COMMANDS = ["delete", "check"];
-const TB_COMMAND = 'tb';
 
 $cat = $_GET['cat'] ?? null;
 $task = $_GET['task'] ?? null;
@@ -20,28 +24,9 @@ if (!empty($cat) && in_array($cat, COMMANDS)) {
  }
 }
 
-$board = tbData();
-$board = parseCategoriesToLinkAction($board);
-$board = parseHtmlLinkUrl($board);
-
-function parseCategoriesToLinkAction(string $data): string
-{
-    $pattern = "/(([@](.*)) )/m";
-    $replacement = "<a href='?catName=$3'>$2</a> ";
-    return preg_replace($pattern, $replacement, $data);
-}
-
-function parseHtmlLinkUrl(string $data): string
-{
-    $pattern = "@(https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9:%_\+.~#?&//=]*))@i";
-    $replacement = "<a target='_blank' href='$1'>$1</a> ";
-    return preg_replace($pattern, $replacement, $data);
-}
-
-function tbData(): string
-{
-    return shell_exec(TB_COMMAND);
-}
+$taskRepository     = new TbTaskRepository();
+$taskListUseCase    = new TaskListUseCase($taskRepository);
+$board              = $taskListUseCase->execute();
 
 ?><!doctype html>
 <html lang="en">
