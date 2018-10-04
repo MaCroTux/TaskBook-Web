@@ -2,6 +2,8 @@
 
 namespace TaskBook\Application;
 
+use TaskBook\Application\Parsers\CategoriesToLinkActionParser;
+use TaskBook\Application\Parsers\TextToLinkParser;
 use TaskBook\Infrastructure\TbTaskRepository;
 
 class TaskListUseCase
@@ -19,23 +21,9 @@ class TaskListUseCase
     public function execute(): string
     {
         $board = $this->taskRepository->all();
-        $board = $this->parseCategoriesToLinkAction($board);
-        $board = $this->parseHtmlLinkUrl($board);
+        $board = CategoriesToLinkActionParser::build()->parser($board);
+        $board = TextToLinkParser::build()->parser($board);
 
         return $board;
-    }
-
-    private function parseCategoriesToLinkAction(string $data): string
-    {
-        $pattern = "/(([@](.*)) )/m";
-        $replacement = "<a href='?catName=$3'>$2</a> ";
-        return preg_replace($pattern, $replacement, $data);
-    }
-
-    private function parseHtmlLinkUrl(string $data): string
-    {
-        $pattern = "@(https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9:%_\+.~#?&//=]*))@i";
-        $replacement = "<a target='_blank' href='$1'>$1</a> ";
-        return preg_replace($pattern, $replacement, $data);
     }
 }
