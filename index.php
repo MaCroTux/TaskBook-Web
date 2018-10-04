@@ -1,12 +1,13 @@
 <?php
 
-$commands = ["delete", "check"];
+const COMMANDS = ["delete", "check"];
+const TB_COMMAND = 'tb';
 
 $cat = $_GET['cat'] ?? null;
 $task = $_GET['task'] ?? null;
 $script = $_SERVER['SCRIPT_NAME'];
 
-if (!empty($cat) && in_array($cat, $commands)) {
+if (!empty($cat) && in_array($cat, COMMANDS)) {
  system("tb --$cat $task");
  header("Location: ".$script);
 } else {
@@ -19,12 +20,28 @@ if (!empty($cat) && in_array($cat, $commands)) {
  }
 }
 
-$board = shell_exec("tb");
+$board = tbData();
+$board = parseCategoriesToLinkAction($board);
+$board = parseHtmlLinkUrl($board);
 
-$board = preg_replace("/(([@](.*)) )/m", "<a href='?catName=$3'>$2</a> ", $board);
-$board = preg_replace("@(https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9:%_\+.~#?&//=]*))@i", "<a target='_blank' href='$1'>$1</a> ", $board);
+function parseCategoriesToLinkAction(string $data): string
+{
+    $pattern = "/(([@](.*)) )/m";
+    $replacement = "<a href='?catName=$3'>$2</a> ";
+    return preg_replace($pattern, $replacement, $data);
+}
 
-//(www|http:|https:)+[^\s]+[\w]/
+function parseHtmlLinkUrl(string $data): string
+{
+    $pattern = "@(https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9:%_\+.~#?&//=]*))@i";
+    $replacement = "<a target='_blank' href='$1'>$1</a> ";
+    return preg_replace($pattern, $replacement, $data);
+}
+
+function tbData(): string
+{
+    return shell_exec(TB_COMMAND);
+}
 
 ?><!doctype html>
 <html lang="en">
