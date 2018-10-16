@@ -8,8 +8,7 @@ use TaskBook\Infrastructure\InMemoryTaskRepository;
 
 class TaskListUseCaseTest extends TestCase
 {
-    const TASK_LIST = "
-        @asdasd [0/1]
+    const TASK_LIST = "  @asdasd [0/1]
             1. ☐  asdasdasd
 
         0% of all tasks complete.
@@ -30,8 +29,7 @@ class TaskListUseCaseTest extends TestCase
 
     public function testShouldReturnTaskListWhenExecuteUseCase()
     {
-        $expected = "
-        <a href='?catName=asdasd'>@asdasd</a> [0/1]
+        $expected = "<a href='?catName=asdasd'>@asdasd</a> [0/1]
             1. ☐  asdasdasd
 
         0% of all tasks complete.

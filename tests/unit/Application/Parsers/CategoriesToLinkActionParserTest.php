@@ -11,7 +11,7 @@ class CategoriesToLinkActionParserTest extends TestCase
     {
         $sut = CategoriesToLinkActionParser::build();
 
-        $data = '@IAmCateory 3d';
+        $data = '  @IAmCateory 3d';
         $expected = "<a href='?catName=IAmCateory'>@IAmCateory</a> 3d";
 
         $result = $sut->parser($data);
