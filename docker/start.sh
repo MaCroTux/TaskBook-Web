@@ -1,5 +1,6 @@
 docker build .                                     \
     -t taskbook                                 && \
+docker/composer.sh install                      && \
 docker run                                         \
     -d                                             \
     -p 8080:80                                     \
